@@ -22,8 +22,8 @@ go build -o "${SCRIPT_DIR}/bin/update-gradle-smp-plugin" "${SCRIPT_DIR}/src/upda
 
 SNAKE_VERSION=$(echo "${NEW_VERSION}" | sed 's/\./_/g')
 
+# --loglevel DEBUG \
 git-xargs \
-  --loglevel DEBUG \
   --branch-name "feature/update_gradle_smp_plugin_v${SNAKE_VERSION}" \
   --commit-message "Update gradle-smp-plugin to version ${NEW_VERSION}" \
   --github-org "scm-manager" \
