@@ -1,0 +1,30 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+NEW_VERSION="${1-}"
+
+if [ "${NEW_VERSION}" = "" ]; then
+  echo "usage update-gradle-smp-plugin newVersion"
+  exit 1
+fi
+
+echo "type doit to update the gradle-smp-plugin to v${NEW_VERSION} of all scm-manager repositories"
+read INPUT
+
+if [ "${INPUT}" != "doit" ]; then
+  echo "abort"
+  exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+go build -o "${SCRIPT_DIR}/bin/update-gradle-smp-plugin" "${SCRIPT_DIR}/src/update-gradle-smp-plugin.go"
+
+SNAKE_VERSION=$(echo "${NEW_VERSION}" | sed 's/\./_/g')
+
+git-xargs \
+  --loglevel DEBUG \
+  --branch-name "feature/update_gradle_smp_plugin_v${SNAKE_VERSION}" \
+  --commit-message "Update gradle-smp-plugin to version ${NEW_VERSION}" \
+  --github-org "scm-manager" \
+  "${SCRIPT_DIR}/bin/update-gradle-smp-plugin" . "${NEW_VERSION}"
