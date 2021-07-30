@@ -22,7 +22,13 @@ go build -o "${SCRIPT_DIR}/bin/update-gradle-smp-plugin" "${SCRIPT_DIR}/src/upda
 
 SNAKE_VERSION=$(echo "${NEW_VERSION}" | sed 's/\./_/g')
 
+# For debug output:
 # --loglevel DEBUG \
+
+# To update default branch without pr:
+# --branch-name develop \
+# --skip-pull-requests \
+
 git-xargs \
   --branch-name "feature/update_gradle_smp_plugin_v${SNAKE_VERSION}" \
   --commit-message "Update gradle-smp-plugin to version ${NEW_VERSION}" \
