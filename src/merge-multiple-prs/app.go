@@ -76,8 +76,8 @@ func main() {
 			fmt.Printf("successfully merged pr %d of %s", mr.pr, mr.repo)
 		}
 
-		fmt.Printf("Delete branch %s of repository %s", mr.ref, mr.repo)
-		_, err = client.Git.DeleteRef(ctx, "scm-manager", mr.repo, mr.ref)
+		fmt.Printf("Delete branch %s of repository %s\n", mr.ref, mr.repo)
+		_, err = client.Git.DeleteRef(ctx, "scm-manager", mr.repo, "refs/heads/"+mr.ref)
 		if err != nil {
 			fmt.Printf("failed to delete branch %v\n", err)
 		}
