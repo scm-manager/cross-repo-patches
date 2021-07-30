@@ -2,6 +2,23 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if ! command -v git-xargs > /dev/null; then
+  echo "The command requires git-xargs on the PATH, please install it"
+  echo "https://github.com/gruntwork-io/git-xargs#getting-started"
+  exit 1
+fi
+
+if ! command -v go > /dev/null; then
+  echo "The command requires go on the PATH, please install it"
+  echo "https://golang.org/doc/install"
+  exit 1
+fi
+
+if ! command -v sed > /dev/null; then
+  echo "There is no sed on the PATH, on which weird operating system do you run this script?"
+  exit 1
+fi
+
 NEW_VERSION="${1-}"
 
 if [ "${NEW_VERSION}" = "" ]; then
@@ -28,6 +45,9 @@ SNAKE_VERSION=$(echo "${NEW_VERSION}" | sed 's/\./_/g')
 # To update default branch without pr:
 # --branch-name develop \
 # --skip-pull-requests \
+
+# For test runs:
+# --dry \
 
 git-xargs \
   --branch-name "feature/update_gradle_smp_plugin_v${SNAKE_VERSION}" \
