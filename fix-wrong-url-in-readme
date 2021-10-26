@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+if ! command -v git-xargs > /dev/null; then
+  echo "The command requires git-xargs on the PATH, please install it"
+  echo "https://github.com/gruntwork-io/git-xargs#getting-started"
+  exit 1
+fi
+
+if ! command -v go > /dev/null; then
+  echo "The command requires go on the PATH, please install it"
+  echo "https://golang.org/doc/install"
+  exit 1
+fi
+
+echo "type doit to update the README.md of all scm-manager repositories"
+read INPUT
+
+if [ "${INPUT}" != "doit" ]; then
+  echo "abort"
+  exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+go build -o "${SCRIPT_DIR}/bin/simple-replace" "${SCRIPT_DIR}/src/simple-replace/app.go"
+
+# For debug output:
+# --loglevel DEBUG \
+
+# To update default branch without pr:
+# --branch-name develop \
+# --skip-pull-requests \
+
+# For test runs:
+# --dry-run \
+
+git-xargs \
+  --branch-name "bugfix/wrong_url_in_readme" \
+  --commit-message "Remove www from scm-manager.org url" \
+  --github-org "scm-manager" \
+  "${SCRIPT_DIR}/bin/simple-replace" README.md https://www.scm-manager.org https://scm-manager.org
