@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+if ! command -v go > /dev/null; then
+  echo "The command requires go on the PATH, please install it"
+  echo "https://golang.org/doc/install"
+  exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/src/create-multiple-prs"; go build -o "${SCRIPT_DIR}/bin/create-multiple-prs" .
+
+"${SCRIPT_DIR}/bin/create-multiple-prs" $*
